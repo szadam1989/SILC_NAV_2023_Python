@@ -13,7 +13,7 @@ file_name = 'database.parquet'
 database = pd.read_parquet(file_name, engine = "pyarrow")
 
 os.chdir("D:/Python/Projects/SILC_NAV_2023/Result/")
-file_save = 'Talalt_Parok_1._kat_PYTHON.txt'
+file_save = 'Talalt_Parok_1._kat_c_PYTHON.txt'
 if (os.path.exists(file_save)):
     os.remove(file_save)
 
@@ -33,7 +33,7 @@ for index, x in SILC.iterrows():
         Employee_BirthName_Diff = stringdist.levenshtein(x['SZNEV_VIZSGALT'], " ".join([y['SZVNEVE'], y['SZUNEVE']]))
         Mother_Name_Diff = stringdist.levenshtein(x['ANYNEV_VIZSGALT'], " ".join([y['AVNEVE'], y['AUNEVE']]))
 
-        if (Employee_Name_Diff == 0 and Mother_Name_Diff == 0):
+        if (Employee_Name_Diff <= 2 and Mother_Name_Diff <= 2):
             with open(file_save, "a") as f:
                 f.write(";".join([SILC.loc[index, 'HAZTART'], SILC.loc[index, 'FIXSZ'], SILC.loc[index, 'SZNEV_VIZSGALT'], SILC.loc[index, 'ANYNEV_VIZSGALT'], 
           " ".join([database_Subset.loc[ind, 'VNEVEM'], database_Subset.loc[ind, 'UNEVEM']]), 
@@ -47,9 +47,9 @@ for index, x in SILC.iterrows():
                 f.write("\n")
 
             SILC.loc[index, 'Talalt'] = 1
-            break
+            continue
 
-        if (Employee_BirthName_Diff == 0 and Mother_Name_Diff == 0):
+        if (Employee_BirthName_Diff <= 2 and Mother_Name_Diff <= 2):
             with open(file_save, "a") as f:
                 f.write(";".join([SILC.loc[index, 'HAZTART'], SILC.loc[index, 'FIXSZ'], SILC.loc[index, 'SZNEV_VIZSGALT'], SILC.loc[index, 'ANYNEV_VIZSGALT'], 
           " ".join([database_Subset.loc[ind, 'SZVNEVE'], database_Subset.loc[ind, 'SZUNEVE']]), 
@@ -63,7 +63,6 @@ for index, x in SILC.iterrows():
                 f.write("\n")
 
             SILC.loc[index, 'Talalt'] = 1
-            break
 
 
 os.chdir("D:/Python/Projects/SILC_NAV_2023/Environment/")

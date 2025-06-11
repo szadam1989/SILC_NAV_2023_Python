@@ -13,13 +13,19 @@ file_name = 'database.parquet'
 database = pd.read_parquet(file_name, engine = "pyarrow")
 
 os.chdir("D:/Python/Projects/SILC_NAV_2023/Result/")
-file_save = 'Talalt_Parok_1._kat_PYTHON.txt'
+file_save = 'Talalt_Parok_6._kat_e_PYTHON.txt'
 if (os.path.exists(file_save)):
     os.remove(file_save)
 
 for index, x in SILC.iterrows():
 
-    if(x['Kategoria'] != 1 or x['Talalt'] != 0):
+    if(x['Kategoria'] != 6 or x['Talalt'] != 0):
+        continue
+
+    SILC_Name = x['SZNEV_VIZSGALT'].split(" ")
+    SILC_Mother_Name = x['ANYNEV_VIZSGALT']
+
+    if (len(SILC_Name) <= 2):
         continue
     
     database_Subset = database.loc[database['SZUL_DAT'] == "-".join([x['SZEV'], x['SZHO'], x['SZNAP']])]
@@ -29,11 +35,15 @@ for index, x in SILC.iterrows():
     
     for ind, y in database_Subset.iterrows():
 
-        Employee_Name_Diff = stringdist.levenshtein(x['SZNEV_VIZSGALT'], " ".join([y['VNEVEM'], y['UNEVEM']]))
-        Employee_BirthName_Diff = stringdist.levenshtein(x['SZNEV_VIZSGALT'], " ".join([y['SZVNEVE'], y['SZUNEVE']]))
-        Mother_Name_Diff = stringdist.levenshtein(x['ANYNEV_VIZSGALT'], " ".join([y['AVNEVE'], y['AUNEVE']]))
+        FirstName = y['UNEVEM'].split(" ")
+        BirthFirstName = y['SZUNEVE'].split(" ")
+        MotherFirstName = y['AUNEVE'].split(" ")
 
-        if (Employee_Name_Diff == 0 and Mother_Name_Diff == 0):
+        Employee_Name_Diff = stringdist.levenshtein(" ".join([SILC_Name[1], SILC_Name[2]]), " ".join([y['VNEVEM'], FirstName[0]]))
+        Employee_BirthName_Diff = stringdist.levenshtein(" ".join([SILC_Name[1], SILC_Name[2]]), " ".join([y['SZVNEVE'], BirthFirstName[0]]))
+        Mother_Name_Diff = stringdist.levenshtein(SILC_Mother_Name, " ".join([y['AVNEVE'], MotherFirstName[0]]))
+
+        if (Employee_Name_Diff == 0):
             with open(file_save, "a") as f:
                 f.write(";".join([SILC.loc[index, 'HAZTART'], SILC.loc[index, 'FIXSZ'], SILC.loc[index, 'SZNEV_VIZSGALT'], SILC.loc[index, 'ANYNEV_VIZSGALT'], 
           " ".join([database_Subset.loc[ind, 'VNEVEM'], database_Subset.loc[ind, 'UNEVEM']]), 
@@ -47,9 +57,9 @@ for index, x in SILC.iterrows():
                 f.write("\n")
 
             SILC.loc[index, 'Talalt'] = 1
-            break
+            continue
 
-        if (Employee_BirthName_Diff == 0 and Mother_Name_Diff == 0):
+        if (Employee_BirthName_Diff == 0):
             with open(file_save, "a") as f:
                 f.write(";".join([SILC.loc[index, 'HAZTART'], SILC.loc[index, 'FIXSZ'], SILC.loc[index, 'SZNEV_VIZSGALT'], SILC.loc[index, 'ANYNEV_VIZSGALT'], 
           " ".join([database_Subset.loc[ind, 'SZVNEVE'], database_Subset.loc[ind, 'SZUNEVE']]), 
@@ -63,7 +73,6 @@ for index, x in SILC.iterrows():
                 f.write("\n")
 
             SILC.loc[index, 'Talalt'] = 1
-            break
 
 
 os.chdir("D:/Python/Projects/SILC_NAV_2023/Environment/")

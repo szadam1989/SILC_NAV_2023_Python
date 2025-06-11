@@ -4,36 +4,39 @@ import pickle
 import os
 
 os.chdir("D:/Python/Projects/SILC_NAV_2023/Environment/")
+file_name = 'database.parquet'
+database = pd.read_parquet(file_name, engine = "pyarrow")
+
 file_name = 'SILC'
 SILC = None
 with open(file_name, "rb") as file:
     SILC = pickle.load(file)
 
-file_name = 'database.parquet'
-database = pd.read_parquet(file_name, engine = "pyarrow")
-
 os.chdir("D:/Python/Projects/SILC_NAV_2023/Result/")
-file_save = 'Talalt_Parok_1._kat_PYTHON.txt'
+file_save = 'Talalt_Parok_3._kat_SZUL_DAT_NEM_EGYEZIK_PYTHON.txt'
 if (os.path.exists(file_save)):
     os.remove(file_save)
 
 for index, x in SILC.iterrows():
 
-    if(x['Kategoria'] != 1 or x['Talalt'] != 0):
+    if (x['Kategoria'] != 3 or x['Talalt'] != 0):
         continue
-    
-    database_Subset = database.loc[database['SZUL_DAT'] == "-".join([x['SZEV'], x['SZHO'], x['SZNAP']])]
+
+    database_Subset = database.loc[database['VNEVEM'].str.slice(0, 1) == x['SZNEV_VIZSGALT'][0:1]]
 
     if (len(database_Subset) == 0):
         continue
-    
+
     for ind, y in database_Subset.iterrows():
 
         Employee_Name_Diff = stringdist.levenshtein(x['SZNEV_VIZSGALT'], " ".join([y['VNEVEM'], y['UNEVEM']]))
         Employee_BirthName_Diff = stringdist.levenshtein(x['SZNEV_VIZSGALT'], " ".join([y['SZVNEVE'], y['SZUNEVE']]))
         Mother_Name_Diff = stringdist.levenshtein(x['ANYNEV_VIZSGALT'], " ".join([y['AVNEVE'], y['AUNEVE']]))
 
-        if (Employee_Name_Diff == 0 and Mother_Name_Diff == 0):
+        if (int(x['SZEV']) != int(y['SZUL_DAT'][0:4]) and int(x['SZHO']) != int(y['SZUL_DAT'][5:7]) and int(x['SZNAP']) != int(y['SZUL_DAT'][8:10])):
+            continue 
+        
+        if (Employee_Name_Diff == 0):
             with open(file_save, "a") as f:
                 f.write(";".join([SILC.loc[index, 'HAZTART'], SILC.loc[index, 'FIXSZ'], SILC.loc[index, 'SZNEV_VIZSGALT'], SILC.loc[index, 'ANYNEV_VIZSGALT'], 
           " ".join([database_Subset.loc[ind, 'VNEVEM'], database_Subset.loc[ind, 'UNEVEM']]), 
@@ -47,9 +50,8 @@ for index, x in SILC.iterrows():
                 f.write("\n")
 
             SILC.loc[index, 'Talalt'] = 1
-            break
 
-        if (Employee_BirthName_Diff == 0 and Mother_Name_Diff == 0):
+        if (Employee_BirthName_Diff == 0):
             with open(file_save, "a") as f:
                 f.write(";".join([SILC.loc[index, 'HAZTART'], SILC.loc[index, 'FIXSZ'], SILC.loc[index, 'SZNEV_VIZSGALT'], SILC.loc[index, 'ANYNEV_VIZSGALT'], 
           " ".join([database_Subset.loc[ind, 'SZVNEVE'], database_Subset.loc[ind, 'SZUNEVE']]), 
@@ -61,9 +63,8 @@ for index, x in SILC.iterrows():
           SILC.loc[index, 'FEOR08'],
           str(SILC.loc[index, 'Kategoria'])]))
                 f.write("\n")
-
+                
             SILC.loc[index, 'Talalt'] = 1
-            break
 
 
 os.chdir("D:/Python/Projects/SILC_NAV_2023/Environment/")

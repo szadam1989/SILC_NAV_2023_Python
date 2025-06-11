@@ -6,11 +6,10 @@ import pickle
 os.chdir("D:/Python/Projects/SILC_NAV_2023/SPSS/")
 SILC = pd.read_spss("alkalmazottak_2024.sav")
 
-# SILC.info()
+# SILC.info() 
 print(SILC.shape)
 print(len(SILC))
 print(len(SILC.columns))
-# display(SILC)
 
 SILC['HAZTART'] = SILC['HAZTART'].astype('int64')
 SILC['FIXSZ'] = SILC['FIXSZ'].astype('int64')
@@ -33,6 +32,8 @@ SILC['FEOR08'] = SILC['FEOR08'].astype('str')
 
 SILC['SZHO'] = SILC['SZHO'].apply('{:0>2}'.format)
 SILC['SZNAP'] = SILC['SZNAP'].apply('{:0>2}'.format)
+SILC['FEOR08'] = SILC['FEOR08'].apply('{:0>4}'.format)
+
 
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV'].str.upper()
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV'].str.upper()
@@ -63,26 +64,32 @@ SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('DR. ', '', regex = 
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('DR.', '', regex = False)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('IFJ. ', '', regex = False)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('IFJ.', '', regex = False)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('IF. ', '', regex = False)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('IF.', '', regex = False)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('ID. ', '', regex = False)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('ID.', '', regex = False)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('OZV. ', '', regex = False)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('OZV.', '', regex = False)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('.', '', regex = False)
-SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('DR ', '', regex = True)
-SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('IFJ ', '', regex = True)
-SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('IFJABB ', '', regex = True)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('DR ', '', regex = False)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('IFJ ', '', regex = False)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('IFJABB ', '', regex = False)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(r'^IF ', '', regex = True)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(r'^ID ', '', regex = True)
-SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('OZV ', '', regex = True)
-SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(' IFJ', '', regex = True)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('OZV ', '', regex = False)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(' IFJ', '', regex = False)
 
-SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(' -', '', regex = True)
-SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('- ', '', regex = True)
-SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('-', '', regex = True)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(' -', '', regex = False)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('- ', '', regex = False)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('-', '', regex = False)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(r'\(', ' ', regex = True)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(r'\)', ' ', regex = True)
-SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace('  ', ' ', regex = True)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(r'\s\s\s', ' ', regex = True)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(r'\s\s', ' ', regex = True)
 
-# SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(r'^ +| +$', r'', regex = True)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(r'^ +| +$', '', regex = True)
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.lstrip()
+SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.rstrip()
 
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(r'^A ', 'A. ', regex = True)
 SILC['SZNEV_VIZSGALT'] = SILC['SZNEV_VIZSGALT'].str.replace(r'^B ', 'B. ', regex = True)
@@ -146,26 +153,32 @@ SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('DR. ', '', regex 
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('DR.', '', regex = False)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('IFJ. ', '', regex = False)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('IFJ.', '', regex = False)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('IF. ', '', regex = False)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('IF.', '', regex = False)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('ID. ', '', regex = False)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('ID.', '', regex = False)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('OZV. ', '', regex = False)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('OZV.', '', regex = False)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('.', '', regex = False)
-SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('DR ', '', regex = True)
-SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('IFJ ', '', regex = True)
-SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('IFJABB ', '', regex = True)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('DR ', '', regex = False)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('IFJ ', '', regex = False)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('IFJABB ', '', regex = False)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(r'^IF ', '', regex = True)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(r'^ID ', '', regex = True)
-SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('OZV ', '', regex = True)
-SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(' IFJ', '', regex = True)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('OZV ', '', regex = False)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(' IFJ', '', regex = False)
 
-SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(' -', '', regex = True)
-SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('- ', '', regex = True)
-SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('-', '', regex = True)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(' -', '', regex = False)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('- ', '', regex = False)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('-', '', regex = False)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(r'\(', ' ', regex = True)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(r'\)', ' ', regex = True)
-SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace('  ', ' ', regex = True)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(r'\s\s\s', ' ', regex = True)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(r'\s\s', ' ', regex = True)
 
-# SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(r'^ +| +$', r'', regex = True)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(r'^ +| +$', '', regex = True)
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.lstrip()
+SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.rstrip()
 
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(r'^A ', 'A. ', regex = True)
 SILC['ANYNEV_VIZSGALT'] = SILC['ANYNEV_VIZSGALT'].str.replace(r'^B ', 'B. ', regex = True)
@@ -228,12 +241,12 @@ SILC['Kategoria'] = np.where(Category_8 == True, 8, SILC['Kategoria'])
 Category_9 = ~SILC['SZNEV_VIZSGALT'].str.contains(' ') & SILC['ANYNEV_VIZSGALT'].str.contains('.', regex = False)
 SILC['Kategoria'] = np.where(Category_9 == True, 9, SILC['Kategoria'])
 
-print(len(SILC.loc[SILC['Kategoria'] == 1])) #7336
+print(len(SILC.loc[SILC['Kategoria'] == 1])) #7335
 print(len(SILC.loc[SILC['Kategoria'] == 2])) # 1
 print(len(SILC.loc[SILC['Kategoria'] == 3])) # 3
 print(len(SILC.loc[SILC['Kategoria'] == 4])) # 1
 print(len(SILC.loc[SILC['Kategoria'] == 5])) # 11
-print(len(SILC.loc[SILC['Kategoria'] == 6])) # 265
+print(len(SILC.loc[SILC['Kategoria'] == 6])) # 266
 print(len(SILC.loc[SILC['Kategoria'] == 7])) # 12
 print(len(SILC.loc[SILC['Kategoria'] == 8])) # 1
 print(len(SILC.loc[SILC['Kategoria'] == 9])) # 0
@@ -255,3 +268,6 @@ os.chdir("D:/Python/Projects/SILC_NAV_2023/Environment/")
 file_name = 'SILC'
 with open(file_name, "wb") as file:
     pickle.dump(SILC, file)
+
+SILC.info()
+# SILC.to_parquet("SILC.parquet", engine = "pyarrow") # Nem működik, pedig nincs is benne datetime
