@@ -8,7 +8,8 @@ SILC = None
 with open(file_name, "rb") as file:
     SILC = pickle.load(file)
 
-print(len(SILC.loc[(SILC['Kategoria'] == 1) & (SILC['Talalt'] == 1)])) # 3613, 4154, 4861, 5004, 5195, 5239, 5265, 5281, 5318, 5338, 5382, 5414
+
+print(len(SILC.loc[(SILC['Kategoria'] == 1) & (SILC['Talalt'] == 1)])) # 3613, 4154, 4861, 5004, 5195, 5239, 5265, 5281, 5318, 5338, 5382, 5414, 5612, 5644
 print(len(SILC.loc[(SILC['Kategoria'] == 2) & (SILC['Talalt'] == 1)])) # 0
 print(len(SILC.loc[(SILC['Kategoria'] == 3) & (SILC['Talalt'] == 1)])) # 2, 3
 print(len(SILC.loc[(SILC['Kategoria'] == 4) & (SILC['Talalt'] == 1)])) # 0
@@ -86,9 +87,21 @@ SILC.loc[SILC['FIXSZ'] == "7624410002", "Talalt"] = 0
 SILC.loc[SILC['FIXSZ'] == "7686010001", "Talalt"] = 0 
 SILC.loc[SILC['FIXSZ'] == "7855510001", "Talalt"] = 0  """
 
+SILC.loc[SILC['FIXSZ'] == "816910001", "Talalt"] = 0
+SILC.loc[SILC['FIXSZ'] == "854710003", "Talalt"] = 0
+SILC.loc[SILC['FIXSZ'] == "991510001", "Talalt"] = 0
+SILC.loc[SILC['FIXSZ'] == "2401110002", "Talalt"] = 0
+SILC.loc[SILC['FIXSZ'] == "6242110001", "Talalt"] = 0
+SILC.loc[SILC['FIXSZ'] == "6623810001", "Talalt"] = 0
+SILC.loc[SILC['FIXSZ'] == "6817010002", "Talalt"] = 0
+SILC.loc[SILC['FIXSZ'] == "7790110001", "Talalt"] = 0
 
+SILC.loc[SILC['FIXSZ'] == "2705510003", "Talalt"] = 0
+SILC.loc[SILC['FIXSZ'] == "6745610001", "Talalt"] = 0
 
+print(SILC.loc[SILC['SZNAP'] == "00"])
 
+print(SILC.loc[SILC['FIXSZ'] == "6603010001"])
 
 
 
@@ -105,15 +118,17 @@ with open(file_name, "wb") as file:
 
 # print(SILC.loc[(SILC['Kategoria'] == 6) & (SILC['Talalt'] == 0)].to_string())
 
-print(SILC.loc[SILC['SZNAP'] == "00"])
+
 
 """ print(SILC.loc[SILC['FIXSZ'] == "2457410002", "Talalt"])
 print(SILC.loc[SILC['FIXSZ'] == "6880210002", "Talalt"])
 print(SILC.loc[SILC['FIXSZ'] == "7079910001", "Talalt"]) """
 
 
-""" file_name = 'database.parquet'
-database = pd.read_parquet(file_name, engine = "pyarrow") """
+file_name = 'database.parquet'
+database = pd.read_parquet(file_name, engine = "pyarrow")
+
+print(database.loc[database['AAJE'] == "8455104333"])
 
 """ 
 print(database.loc[database['VNEVEM'] == ""]) # 608 sor és 8 oszlop

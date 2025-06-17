@@ -52,7 +52,7 @@ for index, x in SILC.iterrows():
           str(SILC.loc[index, 'Kategoria'])]))
                 f.write("\n")
 
-            #SILC.loc[index, 'Talalt'] = 1
+            SILC.loc[index, 'Talalt'] = 1
             continue
 
         if (Employee_BirthName_Diff == 100 and Mother_Name_Diff == 100):
@@ -68,7 +68,7 @@ for index, x in SILC.iterrows():
           str(SILC.loc[index, 'Kategoria'])]))
                 f.write("\n")
                 
-            #SILC.loc[index, 'Talalt'] = 1
+            SILC.loc[index, 'Talalt'] = 1
 
 
 os.chdir("D:/Python/Projects/SILC_NAV_2023/Environment/")
